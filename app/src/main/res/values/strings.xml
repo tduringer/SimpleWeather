@@ -7,5 +7,7 @@
     <string name="uv_label">UV</string>
     <string name="feels_like_label">Feels Like</string>
     <string name="add_degree_symbol_template">%1s\u00B0</string>
+    <string name="add_arrow_symbol_template">%1s\u2197</string>
+    <string name="add_percent_symbol_template">%1s\u0025</string>
 
 </resources>

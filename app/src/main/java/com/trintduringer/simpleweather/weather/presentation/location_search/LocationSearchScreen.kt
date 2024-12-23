@@ -17,7 +17,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.trintduringer.simpleweather.ui.theme.SimpleWeatherTheme
+import com.trintduringer.simpleweather.weather.presentation.location_search.components.ErrorBox
+import com.trintduringer.simpleweather.weather.presentation.location_search.components.LoadingIndicatorBox
 import com.trintduringer.simpleweather.weather.presentation.location_search.components.LocationSearchBar
+import com.trintduringer.simpleweather.weather.presentation.location_search.components.NoCitySelectedBox
+import com.trintduringer.simpleweather.weather.presentation.location_search.components.SavedResultItem
+import com.trintduringer.simpleweather.weather.presentation.location_search.components.SearchResultItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -28,12 +33,12 @@ fun LocationSearchScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LocationSearchScreen(
-        state = state,
+        state = locationSearchStateNoCitySelected,
         onAction = { action ->
             viewModel.onAction(action)
-        }
+        },
+        modifier = modifier
     )
-
 }
 
 @Composable
@@ -62,6 +67,33 @@ private fun LocationSearchScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         )
+        /**
+         * First check for error. If an error exists then everything else
+         * is overridden unless the state.isLoading is true.
+         * Then check for isLoading, then check for if we have a search result,
+         * then check for if we have a savedWeatherInfo, else we show
+         * no city selected box.
+         */
+        if (state.errorMessage != null && !state.isLoading) {
+            ErrorBox(errorMessage = state.errorMessage)
+        } else if (state.isLoading) {
+            LoadingIndicatorBox()
+        } else if (state.searchResult != null) {
+            SearchResultItem(
+                weatherInfo = state.searchResult,
+                onClick = {},
+                modifier = Modifier
+                    .padding(16.dp)
+            )
+        } else if (state.savedWeatherInfo != null) {
+            SavedResultItem(
+                weatherInfo = state.savedWeatherInfo,
+                modifier = modifier
+                    .padding(16.dp)
+            )
+        } else if (state.searchQuery.isEmpty()) {
+            NoCitySelectedBox()
+        }
     }
 
 }
@@ -71,7 +103,7 @@ private fun LocationSearchScreen(
 private fun LocationSearchScreenPreview() {
     SimpleWeatherTheme {
         LocationSearchScreen(
-            state = LocationSearchState(),
+            state = locationSearchStateWithSearchResult,
             onAction = {}
         )
     }
