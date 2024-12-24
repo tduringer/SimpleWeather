@@ -9,5 +9,11 @@
     <string name="add_degree_symbol_template">%1s\u00B0</string>
     <string name="add_arrow_symbol_template">%1s\u2197</string>
     <string name="add_percent_symbol_template">%1s\u0025</string>
+    <string name="data_error_request_timed_out">Request Timed Out</string>
+    <string name="data_error_too_many_requests">Too Many Requests</string>
+    <string name="data_error_no_internet">No internet</string>
+    <string name="data_error_server_error">Server error</string>
+    <string name="data_error_serialization_error">Serialization error</string>
+    <string name="data_error_unknown_error">Unknown error</string>
 
 </resources>
