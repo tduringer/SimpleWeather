@@ -1,9 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -76,4 +77,5 @@ dependencies {
 
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.coil)
+    implementation(compose.components.resources)
 }

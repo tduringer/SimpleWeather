@@ -1,5 +1,7 @@
 package com.trintduringer.simpleweather.weather.presentation.location_search
 
+import com.trintduringer.simpleweather.R
+import com.trintduringer.simpleweather.core.presentation.UiText
 import com.trintduringer.simpleweather.weather.domain.WeatherInfo
 import com.trintduringer.simpleweather.weather.domain.sampleWeatherInfo1
 import com.trintduringer.simpleweather.weather.domain.sampleWeatherInfo2
@@ -9,7 +11,7 @@ data class LocationSearchState(
     val searchResult: WeatherInfo? = null,
     val savedWeatherInfo: WeatherInfo? = null,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessage: UiText? = null,
 )
 
 /**
@@ -25,7 +27,7 @@ val locationSearchStateError = LocationSearchState(
     searchResult = sampleWeatherInfo2,
     savedWeatherInfo = sampleWeatherInfo1,
     isLoading = false,
-    errorMessage = "No internet available"
+    errorMessage = UiText.StringResourceInt(int = R.string.data_error_no_internet)
 )
 
 val locationSearchStateLoading = LocationSearchState(

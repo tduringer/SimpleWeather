@@ -33,7 +33,7 @@ fun LocationSearchScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LocationSearchScreen(
-        state = locationSearchStateNoCitySelected,
+        state = state,
         onAction = { action ->
             viewModel.onAction(action)
         },
@@ -75,7 +75,7 @@ private fun LocationSearchScreen(
          * no city selected box.
          */
         if (state.errorMessage != null && !state.isLoading) {
-            ErrorBox(errorMessage = state.errorMessage)
+            ErrorBox(errorMessage = state.errorMessage.asString())
         } else if (state.isLoading) {
             LoadingIndicatorBox()
         } else if (state.searchResult != null) {

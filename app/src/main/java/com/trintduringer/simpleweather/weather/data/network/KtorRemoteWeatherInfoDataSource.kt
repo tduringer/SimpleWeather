@@ -4,13 +4,11 @@ import com.trintduringer.simpleweather.core.data.safeCall
 import com.trintduringer.simpleweather.core.domain.DataError
 import com.trintduringer.simpleweather.core.domain.Result
 import com.trintduringer.simpleweather.weather.data.dto.SearchedWeatherInfoDto
-import com.trintduringer.simpleweather.weather.domain.WeatherInfo
 import io.ktor.client.HttpClient
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
-private const val BASE_URL = "http://api.weatherapi.com/v1"
+private const val BASE_URL = "https://api.weatherapi.com/v1"
 private const val URL_FILE = "current.json"
 private const val API_KEY = "03e2d4ed182a40eaaf8192525241912"
 
@@ -34,7 +32,7 @@ class KtorRemoteWeatherInfoDataSource(
             httpClient.get(
                 urlString = "$BASE_URL/$URL_FILE"
             ) {
-                bearerAuth(API_KEY)
+                parameter("key", API_KEY)
                 parameter("q", query)
                 parameter(
                     "fields",

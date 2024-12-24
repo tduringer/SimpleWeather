@@ -11,9 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.trintduringer.simpleweather.core.data.HttpClientFactory
 import com.trintduringer.simpleweather.ui.theme.SimpleWeatherTheme
+import com.trintduringer.simpleweather.weather.data.network.KtorRemoteWeatherInfoDataSource
+import com.trintduringer.simpleweather.weather.data.repository.DefaultWeatherInfoRepository
 import com.trintduringer.simpleweather.weather.presentation.location_search.LocationSearchScreenRoot
 import com.trintduringer.simpleweather.weather.presentation.location_search.LocationSearchViewModel
+import io.ktor.client.engine.okhttp.OkHttp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +27,17 @@ class MainActivity : ComponentActivity() {
             SimpleWeatherTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LocationSearchScreenRoot(
-                        viewModel = remember { LocationSearchViewModel() },
+                        viewModel = remember {
+                            LocationSearchViewModel(
+                                weatherInfoRepository = DefaultWeatherInfoRepository(
+                                    remoteWeatherInfoDataSource = KtorRemoteWeatherInfoDataSource(
+                                        httpClient = HttpClientFactory.create(
+                                            engine = OkHttp.create()
+                                        )
+                                    )
+                                )
+                            )
+                        },
                         modifier = Modifier
                             .padding(innerPadding)
                     )
