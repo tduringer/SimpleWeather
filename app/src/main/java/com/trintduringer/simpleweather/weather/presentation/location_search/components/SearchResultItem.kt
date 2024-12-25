@@ -1,5 +1,6 @@
 package com.trintduringer.simpleweather.weather.presentation.location_search.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,8 @@ import com.trintduringer.simpleweather.ui.theme.SimpleWeatherTheme
 import com.trintduringer.simpleweather.weather.domain.WeatherInfo
 import com.trintduringer.simpleweather.weather.domain.sampleWeatherInfo1
 
+private const val ICON_PREPEND = "https://"
+
 @Composable
 fun SearchResultItem(
     weatherInfo: WeatherInfo,
@@ -62,7 +65,7 @@ fun SearchResultItem(
                     .fillMaxHeight()
                     .weight(1f),
                 verticalArrangement = Arrangement.Center,
-                ) {
+            ) {
                 Text(
                     text = weatherInfo.cityName,
                     style = MaterialTheme.typography.titleLarge,
@@ -70,7 +73,10 @@ fun SearchResultItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = stringResource(R.string.add_degree_symbol_template,weatherInfo.temperatureC.toString()),
+                    text = stringResource(
+                        R.string.add_degree_symbol_template,
+                        weatherInfo.temperatureC.toString()
+                    ),
                     style = MaterialTheme.typography.titleLarge,
                     fontSize = 64.sp
                 )
@@ -83,12 +89,15 @@ fun SearchResultItem(
                 var imageLoadResult by remember {
                     mutableStateOf<Result<Painter>?>(null)
                 }
+                //https://cdn.weatherapi.com/weather/64x64/day/116.png
                 val painter = rememberAsyncImagePainter(
-                    model = weatherInfo.weatherCondition.icon,
+                    model = ICON_PREPEND + weatherInfo.weatherCondition.icon,
                     onSuccess = {
+                        Log.d("SearchResultItem: painter", "onSuccess start")
                         imageLoadResult = Result.success(it.painter)
                     },
                     onError = {
+                        Log.d("SearchResultItem: painter", "onError start")
                         it.result.throwable.printStackTrace()
                         imageLoadResult = Result.failure(it.result.throwable)
                     }
@@ -108,7 +117,7 @@ fun SearchResultItem(
                             },
                             modifier = Modifier
                                 .aspectRatio(
-                                    ratio = 0.75f,
+                                    ratio = 1f,
                                     matchHeightConstraintsFirst = true
                                 )
                         )
