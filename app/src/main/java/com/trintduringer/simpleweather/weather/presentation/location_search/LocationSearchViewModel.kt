@@ -50,9 +50,11 @@ class LocationSearchViewModel(
             is LocationSearchAction.OnWeatherInfoClick -> {
                 _state.update {
                     it.copy(
+                        searchQuery = action.weatherInfo.cityName,
                         savedWeatherInfo = action.weatherInfo
                     )
                 }
+//                prefsManager.saveString("saved_location", action.weatherInfo.cityName)
             }
         }
     }

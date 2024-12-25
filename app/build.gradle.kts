@@ -78,4 +78,8 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.coil)
     implementation(compose.components.resources)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
+
 }
