@@ -54,7 +54,6 @@ class LocationSearchViewModel(
                         savedWeatherInfo = action.weatherInfo
                     )
                 }
-//                prefsManager.saveString("saved_location", action.weatherInfo.cityName)
             }
         }
     }
