@@ -38,6 +38,8 @@ import com.trintduringer.simpleweather.ui.theme.SimpleWeatherTheme
 import com.trintduringer.simpleweather.weather.domain.WeatherInfo
 import com.trintduringer.simpleweather.weather.domain.sampleWeatherInfo1
 
+private const val ICON_PREPEND = "https://"
+
 @Composable
 fun SavedResultItem(
     weatherInfo: WeatherInfo,
@@ -57,7 +59,7 @@ fun SavedResultItem(
                 mutableStateOf<Result<Painter>?>(null)
             }
             val painter = rememberAsyncImagePainter(
-                model = weatherInfo.weatherCondition.icon,
+                model = ICON_PREPEND + weatherInfo.weatherCondition.icon,
                 onSuccess = {
                     imageLoadResult = Result.success(it.painter)
                 },

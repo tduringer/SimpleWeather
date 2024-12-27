@@ -1,7 +1,9 @@
 package com.trintduringer.simpleweather.weather.presentation.location_search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.trintduringer.simpleweather.core.domain.DataStoreManager
 import com.trintduringer.simpleweather.core.domain.onError
 import com.trintduringer.simpleweather.core.domain.onSuccess
 import com.trintduringer.simpleweather.core.presentation.toUiText
@@ -21,14 +23,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LocationSearchViewModel(
-    private val weatherInfoRepository: WeatherInfoRepository
+    private val weatherInfoRepository: WeatherInfoRepository,
+    private val dataStoreManager: DataStoreManager,
 ) : ViewModel() {
 
     private var searchJob: Job? = null
+    private var savedLocation: String? = null
 
     private val _state = MutableStateFlow(LocationSearchState())
     val state = _state
         .onStart {
+//            observeSavedLocation()
             observeSearchQuery()
         }
         .stateIn(
@@ -40,6 +45,10 @@ class LocationSearchViewModel(
     fun onAction(action: LocationSearchAction) {
         when (action) {
             is LocationSearchAction.OnSearchQueryChanged -> {
+                Log.d("LocationSearchViewModel: onAction", "OnSearchQueryChanged start")
+                viewModelScope.launch {
+                    dataStoreManager.clearDataStore()
+                }
                 _state.update {
                     it.copy(
                         searchQuery = action.newQuery
@@ -48,13 +57,20 @@ class LocationSearchViewModel(
             }
 
             is LocationSearchAction.OnWeatherInfoClick -> {
+                viewModelScope.launch {
+                    savedLocation = action.searchQuerySubmitted
+                    dataStoreManager.saveNewLocation(newLocation = action.searchQuerySubmitted)
+                }
                 _state.update {
                     it.copy(
-                        searchQuery = action.weatherInfo.cityName,
-                        savedWeatherInfo = action.weatherInfo
+                        savedWeatherInfo = action.weatherInfo,
+                        searchResult = null,
+                        savedLocation = action.searchQuerySubmitted
                     )
                 }
             }
+
+            is LocationSearchAction.OnSearchOnDemand -> searchOnDemand(query = action.newQuery)
         }
     }
 
@@ -75,12 +91,25 @@ class LocationSearchViewModel(
                     }
 
                     query.length >= 2 -> {
-                        searchJob?.cancel()
-                        searchJob = searchWeatherInfoForLocation(query)
+                        searchOnDemand(query)
                     }
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    fun searchOnDemand(query: String) {
+        searchJob?.cancel()
+        searchJob = searchWeatherInfoForLocation(query)
+    }
+
+    private suspend fun observeSavedLocation() {
+        dataStoreManager.location.distinctUntilChanged().collect {
+            savedLocation = it
+        }
+        _state.update { it.copy(
+            searchQuery = savedLocation.orEmpty()
+        ) }
     }
 
     private fun searchWeatherInfoForLocation(query: String) = viewModelScope.launch {

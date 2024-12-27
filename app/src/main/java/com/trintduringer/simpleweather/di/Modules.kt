@@ -1,6 +1,7 @@
 package com.trintduringer.simpleweather.di
 
 import com.trintduringer.simpleweather.core.data.HttpClientFactory
+import com.trintduringer.simpleweather.core.domain.DataStoreManager
 import com.trintduringer.simpleweather.weather.data.network.KtorRemoteWeatherInfoDataSource
 import com.trintduringer.simpleweather.weather.data.network.RemoteWeatherInfoDataSource
 import com.trintduringer.simpleweather.weather.data.repository.DefaultWeatherInfoRepository
@@ -19,6 +20,7 @@ val sharedModule = module {
 
     singleOf(::KtorRemoteWeatherInfoDataSource).bind<RemoteWeatherInfoDataSource>()
     singleOf(::DefaultWeatherInfoRepository).bind<WeatherInfoRepository>()
+    singleOf(::DataStoreManager).bind<DataStoreManager>()
 
     viewModelOf(::LocationSearchViewModel)
 }

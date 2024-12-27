@@ -8,6 +8,7 @@ import com.trintduringer.simpleweather.weather.domain.sampleWeatherInfo2
 
 data class LocationSearchState(
     val searchQuery: String = "",
+    val savedLocation: String? = null,
     val searchResult: WeatherInfo? = null,
     val savedWeatherInfo: WeatherInfo? = null,
     val isLoading: Boolean = false,

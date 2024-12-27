@@ -1,5 +1,7 @@
 package com.trintduringer.simpleweather.weather.presentation.location_search.components
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
@@ -22,6 +24,7 @@ import com.trintduringer.simpleweather.ui.theme.SimpleWeatherTheme
 fun LocationSearchBar(
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
+    onSearchOnDemand: (String) -> Unit,
     onImeSearch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +34,20 @@ fun LocationSearchBar(
         onValueChange = onSearchQueryChanged,
         shape = RoundedCornerShape(100),
         placeholder = { Text(stringResource(R.string.search_bar_placeholder)) },
-        trailingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        trailingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        Log.d("LocationSearchBar: Icon", "Search icon clicked")
+                        // Can't get this working properly
+                        //The click is detected but the onSearchOnDemand lambda is not getting called.
+                        onSearchOnDemand
+                    }
+
+            )
+        },
         singleLine = true,
         keyboardActions = KeyboardActions(
             onSearch = {
@@ -55,6 +71,7 @@ private fun LocationSearchBarPreview() {
             searchQuery = "",
             onSearchQueryChanged = {},
             onImeSearch = { },
+            onSearchOnDemand = {}
         )
     }
 }
